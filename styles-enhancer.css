@@ -1,0 +1,93 @@
+body {
+    opacity: 0;
+}
+
+#root {
+    opacity: 0;
+    z-index: 15;
+    position: relative;
+}
+
+
+
+/*---------------------*/
+
+/* Hide robux */
+/*#navbar-robux,*/
+
+/* Hide balance */
+#navbar-settings.cursor-pointer.navbar-icon-item,
+
+/* Original extension hide button*/
+#root>div>button,
+
+/* Original roblox friend list */
+#place-list>div>div>div.friend-carousel-container>div {
+    display: none;
+}
+
+/*---------------------*/
+
+
+
+#game-details-play-button-container {
+    display: flex !important;
+    flex-direction: row !important;
+}
+
+.friendlistListContainer {
+    margin-top: 50px;
+    height: calc(100% - 50px);
+    /* Altura ajustada */
+}
+
+.listContentContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.BFLButtons {
+    background-color: unset;
+    color: rgb(255 255 255 / 60%);
+    border-color: rgb(255 255 255 / 60%);
+    border-radius: 10px;
+}
+
+#nav-robux-icon.nav-robux-icon.rbx-menu-item.nav-credit {
+    display: none;
+    /* Ocultar ícono de crédito */
+}
+
+#chat-main,
+.dialog-container {
+    margin-right: 290px;
+    /* Añadir espacio a la derecha */
+}
+
+#root>div>div>div>div>div>div {
+    /*overflow-x: visible !important; */
+    /*Disabled because the friendlist extension (Main one) glitches*/
+    /*overflow-y: visible !important;*/
+}
+
+
+/* Estilo base para que la página esté visible */
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.5s ease-in;
+}
+
+/* Estilo para hacer el efecto de desvanecimiento */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.2s ease-out;
+}
+
+.RealName {
+    color: dimgray;
+}
+
+.groupList {
+    display: flex;
+    flex-direction: column;
+}

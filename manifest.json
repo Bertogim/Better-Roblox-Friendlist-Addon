@@ -1,0 +1,58 @@
+{
+  "name": "Better Roblox Friendslist MOD",
+  "description": "A better roblox friends list / Modified by Bertogim",
+  "version": "0.3.2",
+  "manifest_version": 3,
+  "icons": {
+    "16": "icons/Icon16x.png",
+    "48": "icons/Icon48x.png",
+    "128": "icons/Icon128x.png"
+  },
+  "background": {
+    "service_worker": "background.bundle.js"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/Icon16x.png",
+      "48": "icons/Icon48x.png",
+      "128": "icons/Icon128x.png"
+    }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "WindowCommunication.bundle.js",
+        "unknowngame.png",
+        "icons/Icon48x.png"
+      ],
+      "matches": [
+        "*://www.roblox.com/*",
+        "*://web.roblox.com/*"
+      ]
+    }
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "*://www.roblox.com/*",
+        "*://web.roblox.com/*"
+      ],
+      "run_at": "document_idle",
+      "js": [
+        "contentScript.bundle.js"
+      ]
+    },
+    {
+      "matches": ["https://www.roblox.com/*"],
+      "js": ["content-enhancer.js"],
+      "css": ["styles-enhancer.css"]
+    }
+  ],
+  "host_permissions": [
+    "*://*.roblox.com/*"
+  ]
+}
