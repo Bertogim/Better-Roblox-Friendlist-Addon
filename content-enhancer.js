@@ -123,16 +123,16 @@ Promise.all([
     // Verificar si los elementos existen
     if (rbxBody && rootElement) {
         // Hacer que #rbx-body se haga más pequeño y se ajuste al espacio restante
-        rbxBody.style.marginRight = friendsPanelWidth+"px";  // Añadir espacio a la derecha
-        rbxBody.style.width = "calc(100% - " + (friendsPanelWidth2+offsetWidth) + "px" + ")";  // Reducir el ancho para dejar espacio a la derecha
+        rbxBody.style.marginRight = friendsPanelWidth + "px";  // Añadir espacio a la derecha
+        rbxBody.style.width = "calc(100% - " + (friendsPanelWidth2 + offsetWidth) + "px" + ")";  // Reducir el ancho para dejar espacio a la derecha
         document.querySelector("#container-main > div.content").style.paddingLeft = "10px"
     }
 
     const rbxFooter = document.querySelector("#footer-container");
 
     if (rbxFooter) {
-        rbxFooter.style.marginRight = friendsPanelWidth+"px";  // Añadir espacio a la derecha
-        rbxFooter.style.width = "calc(100% - " + friendsPanelWidth+"px" + ")";  // Reducir el ancho para dejar espacio a la derecha
+        rbxFooter.style.marginRight = friendsPanelWidth + "px";  // Añadir espacio a la derecha
+        rbxFooter.style.width = "calc(100% - " + friendsPanelWidth + "px" + ")";  // Reducir el ancho para dejar espacio a la derecha
     }
 
     // Estilos iniciales para fijar el elemento a la derecha
@@ -140,7 +140,7 @@ Promise.all([
     element.style.right = "0";
     element.style.top = "0";
     element.style.height = "";
-    element.style.width = friendsPanelWidth+"px"; // Ancho del panel
+    element.style.width = friendsPanelWidth + "px"; // Ancho del panel
     element.style.zIndex = "999"; // Asegura que esté por encima de otros elementos
     element.style.background = body.style.backgroundColor;
 
@@ -403,16 +403,16 @@ Promise.all([
 
             waitForElm('#root > div > div > div > div > div > div > div.listContentContainer').then((elm) => {
 
-
-                // Añade el HTML personalizado al elemento encontrado
+                // Add custom HTML to the found element
                 elm.insertAdjacentHTML('beforeend', MyCustomInnerHTML);
-                elm.style.backgroundColor = body.style.backgroundColor
-                // Función para exportar datos
+                elm.style.backgroundColor = body.style.backgroundColor;
+
+                // Function to export data
                 function exportData(format) {
                     const data = localStorage.getItem("LastOnlineBetterFriendList");
 
                     if (!data) {
-                        alert("No hay datos para exportar.");
+                        alert("No data to export.");
                         return;
                     }
 
@@ -425,79 +425,34 @@ Promise.all([
                         a.click();
                         URL.revokeObjectURL(url);
                     } else if (format === "text") {
-                        // Codificar los datos en Base64
+                        // Encode data in Base64
                         const encodedData = btoa(unescape(encodeURIComponent(data)));
-                        // Copiar al portapapeles
+                        // Copy to clipboard
                         navigator.clipboard.writeText(encodedData)
                             .then(() => {
-                                alert("Datos codificados copiados al portapapeles.");
+                                alert("Encoded data copied to clipboard.");
                             })
                             .catch((error) => {
-                                alert("Error al copiar al portapapeles: " + error.message);
+                                alert("Error copying to clipboard: " + error.message);
                             });
                     }
                 }
 
-                // Función para combinar datos existentes con nuevos datos
+                // Function to merge existing data with new data
                 function mergeData(existingData, newData) {
                     const existing = JSON.parse(existingData || "{}");
                     const newEntries = JSON.parse(newData);
 
                     for (const [friend, timestamp] of Object.entries(newEntries)) {
                         if (!existing[friend] || existing[friend] < timestamp) {
-                            existing[friend] = timestamp; // Actualiza solo si el amigo no existe o el timestamp es más reciente
+                            existing[friend] = timestamp; // Only update if the friend doesn't exist or the timestamp is newer
                         }
                     }
 
-                    return JSON.stringify(existing, null, 2); // Devuelve el JSON formateado
+                    return JSON.stringify(existing, null, 2); // Return formatted JSON
                 }
 
-                // Función para exportar datos
-                function exportData(format) {
-                    const data = localStorage.getItem("LastOnlineBetterFriendList");
-
-                    if (!data) {
-                        alert("No hay datos para exportar.");
-                        return;
-                    }
-
-                    if (format === "json") {
-                        const blob = new Blob([data], { type: "application/json" });
-                        const url = URL.createObjectURL(blob);
-                        const a = document.createElement("a");
-                        a.href = url;
-                        a.download = "LastOnlineBetterFriendList.json";
-                        a.click();
-                        URL.revokeObjectURL(url);
-                    } else if (format === "text") {
-                        // Codificar los datos en Base64
-                        const encodedData = btoa(unescape(encodeURIComponent(data)));
-                        // Copiar al portapapeles
-                        navigator.clipboard.writeText(encodedData)
-                            .then(() => {
-                                alert("Datos codificados copiados al portapapeles.");
-                            })
-                            .catch((error) => {
-                                alert("Error al copiar al portapapeles: " + error.message);
-                            });
-                    }
-                }
-
-                // Función para combinar datos existentes con nuevos datos
-                function mergeData(existingData, newData) {
-                    const existing = JSON.parse(existingData || "{}");
-                    const newEntries = JSON.parse(newData);
-
-                    for (const [friend, timestamp] of Object.entries(newEntries)) {
-                        if (!existing[friend] || existing[friend] < timestamp) {
-                            existing[friend] = timestamp; // Actualiza solo si el amigo no existe o el timestamp es más reciente
-                        }
-                    }
-
-                    return JSON.stringify(existing, null, 2); // Devuelve el JSON formateado
-                }
-
-                // Función para importar datos desde un archivo
+                // Function to import data from a file
                 function importDataFromFile(file) {
                     const reader = new FileReader();
                     reader.onload = function (e) {
@@ -507,45 +462,45 @@ Promise.all([
                             const mergedData = mergeData(existingData, newData);
 
                             localStorage.setItem("LastOnlineBetterFriendList", mergedData);
-                            alert("Datos importados y combinados correctamente.");
+                            alert("Data imported and merged successfully.");
                         } catch (error) {
-                            alert("Error al importar los datos. Asegúrate de que el archivo es válido.");
+                            alert("Error importing data. Ensure the file is valid.");
                         }
                     };
                     reader.readAsText(file);
                 }
 
-                // Función para importar datos desde texto pegado
+                // Function to import data from pasted text
                 function importDataFromText(text) {
                     try {
-                        // Decodificar los datos desde Base64
+                        // Decode data from Base64
                         const decodedData = decodeURIComponent(escape(atob(text)));
                         const existingData = localStorage.getItem("LastOnlineBetterFriendList");
                         const mergedData = mergeData(existingData, decodedData);
 
                         localStorage.setItem("LastOnlineBetterFriendList", mergedData);
-                        alert("Datos importados y combinados correctamente.");
+                        alert("Data imported and merged successfully.");
                     } catch (error) {
-                        alert("Error al importar los datos. Asegúrate de que el texto es válido.");
+                        alert("Error importing data. Ensure the text is valid.");
                     }
                 }
 
-                // Menú de opciones para exportar
+                // Options menu to export
                 document.getElementById("BetterFriendListExport").addEventListener("click", () => {
-                    const option = prompt("Selecciona el formato de exportación:\n\n1. JSON (Archivo)\n2. Texto\n\nEscribe 1 o 2:");
+                    const option = prompt("Select the export format:\n\n1. JSON (File)\n2. Text\n\nEnter 1 or 2:");
 
                     if (option === "1") {
-                        exportData("json"); // Exportar como JSON
+                        exportData("json"); // Export as JSON
                     } else if (option === "2") {
-                        exportData("text"); // Exportar como texto (Base64)
+                        exportData("text"); // Export as text (Base64)
                     } else {
-                        alert("Opción no válida. Debes escribir 1 o 2.");
+                        alert("Invalid option. You must enter 1 or 2.");
                     }
                 });
 
-                // Menú de opciones para importar
+                // Options menu to import
                 document.getElementById("BetterFriendListAdd").addEventListener("click", () => {
-                    const option = prompt("Selecciona el método de importación:\n\n1. Desde archivo\n2. Pegar texto\n\nEscribe 1 o 2:");
+                    const option = prompt("Select the import method:\n\n1. From file\n2. Paste text\n\nEnter 1 or 2:");
 
                     if (option === "1") {
                         const input = document.createElement("input");
@@ -559,13 +514,14 @@ Promise.all([
                         };
                         input.click();
                     } else if (option === "2") {
-                        const text = prompt("Pega aquí los datos codificados:");
+                        const text = prompt("Paste the encoded data here:");
                         if (text) {
                             importDataFromText(text);
                         }
                     } else {
-                        alert("Opción no válida. Debes escribir 1 o 2.");
+                        alert("Invalid option. You must enter 1 or 2.");
                     }
+
                 });
             }, 1000);
         });
