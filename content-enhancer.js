@@ -229,11 +229,8 @@ Promise.all([
     setTimeout(() => {
         document.querySelectorAll("a").forEach((link) => {
             const url = link.href;
-            if (url !== window.location.href + "#" && url) {
+            if (url !== window.location.href + "#" && url && !url.includes("#")) {
                 link.addEventListener("click", (e) => {
-
-
-
                     if (transitionsEnabled === true) {
                         body.style.opacity = 0;
                         rootElement.style.opacity = 0;
