@@ -1,51 +1,73 @@
-// Tabla local en memoria para cachear la configuración
+// Local cache for faster access
 let configCache = {};
 
-// Cargar la configuración desde chrome.storage al iniciar
+// Load configuration from chrome.storage.sync on startup
 chrome.storage.sync.get(null, (data) => {
     configCache = { ...data };
     console.log("Configuración cargada en caché:", configCache);
 });
 
-// Función para obtener un valor de configuración (desde cache)
+// Get config value (check cache first)
 function getConfigValue(key, callback) {
     if (key in configCache) {
-        callback(configCache[key]); // Obtener de la caché local
+        callback(configCache[key]);
     } else {
         chrome.storage.sync.get([key], (data) => {
             const value = data[key] ?? false;
-            configCache[key] = value; // Guardar en cache
+            configCache[key] = value;
             callback(value);
         });
     }
 }
 
-// Función para establecer un valor en el almacenamiento (y en cache)
+// Set config value (update cache and storage, then notify content script)
 function setConfigValue(key, value) {
-    configCache[key] = value; // Actualizar la caché local
+    configCache[key] = value;
     const obj = {};
     obj[key] = value;
     chrome.storage.sync.set(obj, () => {
         console.log(`${key} configurado a:`, value);
+
+        // Send update to content scripts
+        chrome.tabs.query({}, (tabs) => {
+            tabs.forEach((tab) => {
+                chrome.tabs.sendMessage(tab.id, {
+                    action: "setConfigState",
+                    key: key,
+                    value: value
+                });
+            });
+        });
     });
 }
 
-// Escuchar cambios en `chrome.storage.sync` para actualizar la cache
+// Listen for storage changes and update cache + notify content scripts
 chrome.storage.onChanged.addListener((changes) => {
     for (let key in changes) {
         const newValue = changes[key].newValue;
-        configCache[key] = newValue; // Actualizar la caché
+        configCache[key] = newValue;
         console.log(`Cache actualizada: ${key} = ${newValue}`);
+
+        // Notify all content scripts
+        chrome.tabs.query({}, (tabs) => {
+            tabs.forEach((tab) => {
+                chrome.tabs.sendMessage(tab.id, {
+                    action: "setConfigState",
+                    key: key,
+                    value: newValue
+                });
+            });
+        });
     }
 });
 
-// Responder a los mensajes de otros scripts solicitando un valor de configuración
+// Handle messages from popup or other scripts
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.action === "getConfigState") {
         getConfigValue(message.key, (value) => {
             sendResponse({ value: value });
         });
-        return true; // La respuesta será asincrónica
+        return true; // Async response
     }
 
     if (message.action === "setConfigState") {

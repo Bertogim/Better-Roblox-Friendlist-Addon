@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,13 +8,29 @@
 </head>
 <body>
     <h2>Config</h2>
+
     <label class="switch">
         <input type="checkbox" id="transitionsToggle" checked>
         <span class="slider"></span>
     </label>
-    <p>Transitions: <span id="status">Off</span></p>
-    <script src="popup.js"></script>
+    <p>Transitions: <span id="transitionsStatus">Off</span></p>
+    <br>
 
-    <small id="updateNotice" style="color: gray;">Settings may take an extra run to update.</small>
+    <label class="switch">
+        <input type="checkbox" id="moneyToggle">
+        <span class="slider"></span>
+    </label>
+    <p>Hide Money: <span id="moneyStatus">Off</span></p>
+    <br>
+
+    <label class="switch">
+        <input type="checkbox" id="robuxToggle">
+        <span class="slider"></span>
+    </label>
+    <p>Hide Robux: <span id="robuxStatus">Off</span></p>
+
+    <small id="updateNotice" style="color: gray;">Settings may take an extra run update.</small>
+
+    <script src="popup.js"></script>
 </body>
 </html>

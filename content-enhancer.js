@@ -34,6 +34,16 @@ function waitForElement(selector, timeout = 5000) {
 
 
 
+
+
+
+
+
+
+
+
+
+
 function getConfigState(key) {
     return new Promise((resolve) => {
         let storageKey = key + "BetterFriends";
@@ -44,30 +54,79 @@ function getConfigState(key) {
             resolve(JSON.parse(storedValue)); // Resolve immediately
         }
 
-        // Fetch the latest value from the background script asynchronously
         chrome.runtime.sendMessage({ action: "getConfigState", key: key }, (response) => {
             if (response && response.value !== undefined) {
-                localStorage.setItem(storageKey, JSON.stringify(response.value)); // Update localStorage
                 resolve(response.value); // If no local value was found, resolve here
             } else if (storedValue === null) {
-                resolve(false); // Default if neither localStorage nor Chrome storage has it
+                if (key === "transitions") {
+                    resolve(true) //Default of transitions is true
+                } else {
+                    resolve(false); // Default if neither localStorage nor Chrome storage has it
+                }
             }
         });
+
     });
 }
 
+// Apply CSS rules based on settings
+function applyConfig(key, value) {
+    if (key === "hideMoney") {
+        document.body.classList.toggle("BetterFriendsHide-money", value);
+    } else if (key === "hideRobux") {
+        document.body.classList.toggle("BetterFriendsHide-robux", value);
+    }
+
+    const hideMoney = document.body.classList.contains("BetterFriendsHide-money");
+    const hideRobux = document.body.classList.contains("BetterFriendsHide-robux");
+
+    if (hideMoney && hideRobux) {
+        document.body.classList.add("BetterFriendsHide-credit");
+    } else {
+        document.body.classList.remove("BetterFriendsHide-credit");
+    }
+}
+
+
+
+let transitionsEnabled = false;
 
 
 // Listen for updates from the background script and store them locally
 chrome.runtime.onMessage.addListener((message) => {
     if (message.action === "setConfigState") {
-        localStorage.setItem(message.key, JSON.stringify(message.value) + "BetterFriends"); // Update local storage
+        localStorage.setItem(message.key + "BetterFriends", JSON.stringify(message.value));
         console.log(`Updated ${message.key} to`, message.value);
+
+        applyConfig(message.key, message.value);
+
+        if (message.key === "transitions") {
+            transitionsEnabled = message.value; // Update variable if relevant
+        }
     }
 });
 
 
-let transitionsEnabled = false;
+const settings = ["hideMoney", "hideRobux"]; //Transiiton is not here because it loads later
+
+async function loadSettings() {
+    for (let setting of settings) {
+        let value = await getConfigState(setting);
+        applyConfig(setting, value);
+        console.log(`Loaded ${setting}:`, value);
+    }
+}
+
+loadSettings();
+
+
+
+
+
+
+
+
+
 
 
 // Esperar a que ambas promesas se resuelvan antes de continuar
@@ -76,7 +135,7 @@ Promise.all([
     waitForElement("#root")
 ]).then(([transitionsEnabledLocal, elementttt]) => {
     transitionsEnabled = transitionsEnabledLocal;
-    console.log("Transiciones habilitadas:", transitionsEnabled);
+    console.log("Transitions:", transitionsEnabled);
     console.log("Element appeared");
 
     const rootElement = document.querySelector("#root");
@@ -166,9 +225,8 @@ Promise.all([
 
 
 
-    // Espera un poco antes de añadir los eventos de los enlaces
+    // Wait a little bit for links to load
     setTimeout(() => {
-        // Detectar cuando el usuario hace clic en un enlace
         document.querySelectorAll("a").forEach((link) => {
             const url = link.href;
             if (url !== window.location.href + "#" && url) {
@@ -176,28 +234,43 @@ Promise.all([
 
 
 
-                    //e.preventDefault(); // Evita la navegación automática
                     if (transitionsEnabled === true) {
-                        // Agregar clase "fade-out" antes de cambiar la página
                         body.style.opacity = 0;
                         rootElement.style.opacity = 0;
                         body.classList.add("fade-out");
                         rootElement.classList.add("fade-out");
 
-
-                        // Espera aqui?
-                        window.location.href = url;
                         setTimeout(() => {
-                            body.style.opacity = 1;
-                            rootElement.style.opacity = 1;
-                            body.classList.add("fade-in");
-                            rootElement.classList.add("fade-in");
-                        }, 1000);
+
+                        // Wait for the page to fully load before navigating
+                        window.addEventListener("beforeunload", () => {
+                            // Fade out immediately before navigating
+                            body.style.opacity = 0;
+                            rootElement.style.opacity = 0;
+                        });
+
+                        // If the page is already loading (e.g., during navigation), don't apply fade-in yet
+                        if (document.readyState === "loading") {
+                            window.addEventListener("load", () => {
+                                // Once the page is loaded, apply fade-in effect
+                                setTimeout(() => {
+                                    body.style.opacity = 1;
+                                    rootElement.style.opacity = 1;
+                                    body.classList.add("fade-in");
+                                    rootElement.classList.add("fade-in");
+                                }, 1000); // Adjust the timeout if needed
+                            });
+                        } else {
+                            // If the page has already loaded, apply fade-in effect immediately
+                            setTimeout(() => {
+                                body.style.opacity = 1;
+                                rootElement.style.opacity = 1;
+                                body.classList.add("fade-in");
+                                rootElement.classList.add("fade-in");
+                            }, 1000);
+                        }
+                    }, 1000);
                     }
-
-                    console.log(link)
-                    console.log(url)
-
                 });
 
             }

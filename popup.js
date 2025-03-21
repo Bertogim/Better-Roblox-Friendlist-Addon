@@ -1,21 +1,34 @@
+// Function to load setting values
+function loadSetting(key, toggleElement, statusElement) {
+    chrome.runtime.sendMessage({ action: "getConfigState", key: key }, (response) => {
+        const value = response.value ?? false;
+        toggleElement.checked = value;
+        statusElement.textContent = value ? "On" : "Off";
+    });
+}
+
+// Function to update setting
+function updateSetting(key, toggleElement, statusElement) {
+    const value = toggleElement.checked;
+    chrome.runtime.sendMessage({ action: "setConfigState", key: key, value: value });
+    statusElement.textContent = value ? "On" : "Off";
+}
+
+// Setup toggles
 document.addEventListener("DOMContentLoaded", () => {
-    const toggle = document.getElementById("transitionsToggle");
-    const statusText = document.getElementById("status");
+    const transitionsToggle = document.getElementById("transitionsToggle");
+    const moneyToggle = document.getElementById("moneyToggle");
+    const robuxToggle = document.getElementById("robuxToggle");
 
-    // Default to true (checked) if no value is stored
-    let defaultState = true;
+    const transitionsStatus = document.getElementById("transitionsStatus");
+    const moneyStatus = document.getElementById("moneyStatus");
+    const robuxStatus = document.getElementById("robuxStatus");
 
-    // Get stored value
-    chrome.storage.sync.get(["transitions"], (data) => {
-        const isEnabled = data.transitions ?? defaultState;
-        toggle.checked = isEnabled;
-        statusText.textContent = isEnabled ? "On" : "Off";
-    });
+    loadSetting("transitions", transitionsToggle, transitionsStatus);
+    loadSetting("hideMoney", moneyToggle, moneyStatus);
+    loadSetting("hideRobux", robuxToggle, robuxStatus);
 
-    // Save changes when the user toggles
-    toggle.addEventListener("change", () => {
-        const isEnabled = toggle.checked;
-        chrome.storage.sync.set({ transitions: isEnabled });
-        statusText.textContent = isEnabled ? "On" : "Off";
-    });
+    transitionsToggle.addEventListener("change", () => updateSetting("transitions", transitionsToggle, transitionsStatus));
+    moneyToggle.addEventListener("change", () => updateSetting("hideMoney", moneyToggle, moneyStatus));
+    robuxToggle.addEventListener("change", () => updateSetting("hideRobux", robuxToggle, robuxStatus));
 });

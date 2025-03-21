@@ -12,13 +12,17 @@ body {
 
 /*---------------------*/
 
-/* Hide robux */
-/*#navbar-robux,*/
+/* Hide credit */
+body.BetterFriendsHide-credit #navbar-robux,
+
+/* Hide Robux */
+body.BetterFriendsHide-robux #navbar-robux > button > span:nth-child(1),
 
 /* Hide balance */
-#navbar-settings.cursor-pointer.navbar-icon-item,
+body.BetterFriendsHide-money #nav-robux-icon.nav-robux-icon.rbx-menu-item.nav-credit,
 
 /* Original extension hide button*/
+#navbar-settings.cursor-pointer.navbar-icon-item,
 #root>div>button,
 
 /* Original roblox friend list */
@@ -51,11 +55,6 @@ body {
     color: rgb(255 255 255 / 60%);
     border-color: rgb(255 255 255 / 60%);
     border-radius: 10px;
-}
-
-#nav-robux-icon.nav-robux-icon.rbx-menu-item.nav-credit {
-    display: none;
-    /* Ocultar ícono de crédito */
 }
 
 #chat-main,
