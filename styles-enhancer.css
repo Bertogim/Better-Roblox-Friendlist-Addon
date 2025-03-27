@@ -16,7 +16,7 @@ body {
 body.BetterFriendsHide-credit #navbar-robux,
 
 /* Hide Robux */
-body.BetterFriendsHide-robux #navbar-robux > button > span:nth-child(1),
+body.BetterFriendsHide-robux #navbar-robux>button>span:nth-child(1),
 
 /* Hide balance */
 body.BetterFriendsHide-money #nav-robux-icon.nav-robux-icon.rbx-menu-item.nav-credit,
@@ -26,8 +26,10 @@ body.BetterFriendsHide-money #nav-robux-icon.nav-robux-icon.rbx-menu-item.nav-cr
 #root>div>button,
 
 /* Original roblox friend list */
-#place-list>div>div>div.friend-carousel-container>div {
-    display: none;
+#place-list>div>div>div.friend-carousel-container>div,
+#HomeContainer>div.place-list-container>div>div>div.friend-carousel-container,
+.game-home-page-container .friend-carousel-container {
+    display: none !important;
 }
 
 /*---------------------*/
