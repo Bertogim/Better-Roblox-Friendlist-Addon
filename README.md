@@ -10,7 +10,7 @@ Now that addon is back after like 5 months, storing last online locally too, but
 - Peforms much better
 - Saves last online friends data locally (Can be saved and loaded)
 - You can enable settings like transitions clicking the addon in your browser addons tab
-- Panel sticks to the right
+- Panel sticks to the right and the chat button is always visible
 - Compatible with roblokis
 - I will actually fix things quickly not like the original owner
 
