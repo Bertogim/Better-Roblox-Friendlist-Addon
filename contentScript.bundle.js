@@ -20783,7 +20783,7 @@
 
 
                 const getCurrentSimpleLocation = () => {
-                    return currentStatus === "offline" ? `Last online: --` : currentStatus === "online" ? `Online` :
+                    return currentStatus === "offline" ? `Last seen: --` : currentStatus === "online" ? `Online` :
                         currentStatus === "ingame" ? gameGroups ? placeName || rootPlaceName : rootPlaceName || placeName || "In Game" :
                             currentStatus === "studio" ? rootPlaceName || placeName || "In Studio" : "Unknown";
                 };
@@ -20825,7 +20825,7 @@
                         elapsedMs = nowTimestamp - parseInt(storedData[name], 10);
                         ThisLastOnline = formatElapsedTime(elapsedMs) + " ago.";
                     } else {
-                        ThisLastOnline = "User has never been online.";
+                        ThisLastOnline = "Never seen online.";
                     }
                     StatusTitleText = "Last known online on this PC: " + ThisLastOnline;
                 }
@@ -20876,7 +20876,7 @@
                 //I use those comments to do CRTL+F and get to here
 
                 const getCurrentLocation = () => {
-                    return currentStatus === "offline" ? `Last online: ${ThisLastOnline}` : currentStatus === "online" ? `Online` :
+                    return currentStatus === "offline" ? `Last seen: ${ThisLastOnline}` : currentStatus === "online" ? `Online` :
                         currentStatus === "ingame" ? gameGroups ? placeName || rootPlaceName : rootPlaceName || placeName || "In Game" :
                         currentStatus === "studio" ? rootPlaceName || placeName || "In Studio" : "Unknown";
                 };
@@ -21537,7 +21537,7 @@
         class App extends react.Component {
             constructor(props) {
                 super(props);
-                const showFriendsList = JSON.parse(sessionStorage.getItem("showFriendsList"));
+                const showFriendsList = true//JSON.parse(sessionStorage.getItem("showFriendsList"));
                 const showFriendsExtension = JSON.parse(sessionStorage.getItem("showFriendsExtension"));
                 const groupStates = JSON.parse(localStorage.getItem("groupStates"));
                 this.state = {
@@ -21609,10 +21609,10 @@
             }
 
             handleToggleFriendsList() {
-                this.setState(prevState => ({
-                    showFriendsList: !prevState.showFriendsList // eslint-disable-next-line no-sequences
-
-                })), sessionStorage.setItem("showFriendsList", !this.state.showFriendsList);
+            //    this.setState(prevState => ({
+            //        showFriendsList: !prevState.showFriendsList // eslint-disable-next-line no-sequences
+            //
+            //    })), sessionStorage.setItem("showFriendsList", !this.state.showFriendsList);
             }
 
             render() {
